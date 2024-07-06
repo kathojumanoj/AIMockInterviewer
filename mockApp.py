@@ -5,8 +5,8 @@ from flask import session
 import os
 
 app=Flask(__name__)
-app.secret_key = 'Mighty@2566'
-os.environ['GOOGLE_API_KEY']="AIzaSyAmDwU33NavP3x9kEZ0R7CFbj0lH9Vg3hM"
+app.secret_key = 'Mighty'
+os.environ['GOOGLE_API_KEY']="Use Your Secrect API Key"
 genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
 
 
