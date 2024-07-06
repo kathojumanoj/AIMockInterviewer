@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <center><h2>Score Summary</h2></center>
+    <table id="scoreTable">
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Score</th>
+            <th>Feedback</th>
+        </tr>
+        {% for i in range(questions | length) %}
+        <tr>
+            <td>{{ questions[i] }}</td>
+            <td>{{ answers[i] }}</td>
+            <td>{{ scores[i] }}</td>
+            <td>{{ remarks[i] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+</body>
+</html>

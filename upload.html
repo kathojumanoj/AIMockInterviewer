@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions</title>
+    <style>
+        #qanda{
+            display: none;
+        }
+        #btnyes{
+            background-color: rgb(142, 252, 142);
+            padding: 20px;
+        }
+        #btnno{
+            background-color: rgb(239, 112, 97);
+            padding: 20px;
+        }
+        textarea{
+            width: 100%; /* Make the input field take full width */
+            height: 60px;
+            padding: 10px;
+            font-size: large;
+            box-sizing: border-box; /* Include padding and border in the width */
+            margin-bottom: 10px; /* Add space between questions */
+        }
+        label {
+            display: block; /* Display each label on a new line */
+            font-size: 30px;
+            margin-bottom: 10px; /* Add space between questions */
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Mock AI Interviewer</h1>
+    <h1> Let me Ask some Questions :(answer through your voice)</h1>
+    {%if text: %}
+    {% set question_len = text | length %}
+    {% set iter = 0 %}
+        <button id='btnyes' onclick="nextQuestion()">Yes</button>
+        <button id="btnno" onclick="No()">No</button>
+            <form id='qanda' action="/score" method="post" name="questions" >
+                <div id="inputContainer"></div>
+                <button id='btnnext' type="button" onclick="nextQuestion()">Save & Next</button>
+        </form>
+    <h1 id="notext"></h1>
+    {% endif %}
+</body>
+<script>
+    var questions = {{ text | tojson | safe }}; // Assign Flask variable list to JavaScript variable
+    var iterval = 0;
+    function No()
+    {
+        document.getElementById('notext').innerHTML="Ok Quit AND Exit the Window:)";
+        document.getElementById('btnyes').style.display='none';
+        document.getElementById('btnno').style.display='none';
+    }
+    function nextQuestion()
+    {
+        if(iterval>0)
+        {
+            document.getElementById('lab'+(iterval-1)).style.display='none';
+            document.getElementById('txt'+(iterval-1)).style.display='none';
+        }
+        document.getElementById('qanda').style.display='block';
+        document.getElementById('btnyes').style.display='none';
+        document.getElementById('btnno').style.display='none';
+        var container = document.getElementById("inputContainer");
+        var label = document.createElement("label");
+        label.id='lab'+iterval;
+        label.textContent = questions[iterval];
+        var textarea = document.createElement("textarea");
+        textarea.id='txt'+iterval;
+        iterval+=1;
+        textarea.name="qans"+iterval;
+        // textarea.required=true;
+        container.appendChild(label);
+        container.appendChild(textarea);
+        
+
+
+        // Initialize speech recognition
+        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+        recognition.lang = 'en-US'; // Set language to English
+
+        // Start recognition when the textarea gains focus
+        textarea.onfocus = function() {
+            recognition.start();
+        };
+
+        // Process recognized speech
+        recognition.onresult = function(event) {
+            var transcript = event.results[0][0].transcript;
+            textarea.value += transcript; // Set textarea value to recognized speech
+        };
+
+        // Stop recognition when the textarea loses focus
+        textarea.onblur = function() {
+            recognition.stop();
+        };
+
+
+        if(iterval==5)
+        {
+            var input = document.createElement("input");
+            input.type = "submit";
+            document.getElementById('btnnext').style.display='none';
+            container.appendChild(input);
+        }
+
+    }
+</script>
+
+</html>
